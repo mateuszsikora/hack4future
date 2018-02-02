@@ -1,5 +1,5 @@
 {
-  "name": "gate",
+  "name": "management",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,6 +14,5 @@
     "nodemon": "^1.14.12"
   },
   "dependencies": {
-    "bleacon": "^0.5.1"
   }
 }
