@@ -3,7 +3,8 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool:
+    process.env.NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
   entry: './src/index.jsx',
   output: {
     path: path.resolve(process.cwd(), 'build'),
