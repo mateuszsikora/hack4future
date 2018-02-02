@@ -13,7 +13,6 @@ class Product {
     if(!this.id) {
       this.id = db.ref().child('products').push().key;
     }
-    const product = {...this};
     db.ref(`products/${this.id}`).set({...this});
   }
 
