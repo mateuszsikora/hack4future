@@ -1,9 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View, DeviceEventEmitter} from 'react-native';
+import { StyleSheet, Text, ScrollView, DeviceEventEmitter } from 'react-native';
 
 import Beacons from 'react-native-beacons-manager'
 import firebase from 'react-native-firebase';
-
+import DeviceInfo from 'react-native-device-info';
 
 // Tells the library to detect iBeacons
 Beacons.detectIBeacons();
@@ -16,7 +16,7 @@ const db = firebase.database();
 
 // Start detecting all iBeacons in the nearby
 export default class App extends React.Component {
-  state = {beacons: {}, products: {}};
+  state = { beacons: {}, products: {} };
 
   componentDidMount() {
     try {
@@ -62,7 +62,7 @@ export default class App extends React.Component {
         db.ref(`products`).once('value')
           .then(snapshot => {
             const val = snapshot.val();
-            this.setState({products: val});
+            this.setState({ products: val });
           })
       })
   }
@@ -74,18 +74,18 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text>App</Text>
+        <Text>deviceId: {DeviceInfo.getUniqueID()}</Text>
         <Text>beacons: {JSON.stringify(this.state.beacons, null, 2)}</Text>
         <Text>products: {JSON.stringify(this.state.products, null, 2)}</Text>
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
