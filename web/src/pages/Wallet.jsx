@@ -25,7 +25,14 @@ export default class Home extends Component {
   }
 
   render() {
-    const { web3, balance, deposited, toDeposit, toWithdraw } = this.state;
+    const {
+      web3,
+      account,
+      balance,
+      deposited,
+      toDeposit,
+      toWithdraw,
+    } = this.state;
 
     if (!web3) {
       return (
@@ -33,6 +40,10 @@ export default class Home extends Component {
           <h2>Install metamask</h2>
         </a>
       );
+    }
+
+    if (!account) {
+      return <h2>Unlock metamask</h2>;
     }
 
     return (
