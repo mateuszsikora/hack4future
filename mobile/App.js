@@ -6,27 +6,68 @@ import Beacons from 'react-native-beacons-manager'
 
 // Tells the library to detect iBeacons
 Beacons.detectIBeacons()
+Beacons.setForegroundScanPeriod(5000)
+Beacons.setBackgroundScanPeriod(5000)
+Beacons.setBackgroundBetweenScanPeriod(100)
 
+const id = "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"
 
 // Start detecting all iBeacons in the nearby
-Beacons.startRangingBeaconsInRegion('REGION3').then((e)=>console.log("H4FDM succ"+ e), (e)=>console.error("H4FDM succ"+e));
-
 export default class App extends React.Component {
-    state = {}
+    state = {x: {}}
   componentDidMount(){
-  DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
-    console.log('Found beacons!', data.beacons)
-    this.setState({x: data});
-  })
+       try {
+            const granted = PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    'title': 'Location Permission',
+                    'message': 'Activeev needs to access your location.'
+                }
+            )
+            console.log('here', granted);
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Location Permitted")
+            } else {
+                console.log("Location permission denied")
+            }
+        } catch (err) {
+            console.warn(err)
+        }
 
+
+        Beacons.startRangingBeaconsInRegion( "REGION1")
+            .then((e)=>console.log("H4FDM succ"+ e), (e)=>console.error("H4FDM err"+e))
+            .then(()=> {
+                DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
+                    console.log('Found beacons!', data.beacons)
+                    const nw = data.beacons.map(b=>[`${b.uuid}:${b.major}:${b.minor}`, b])
+                        .reduce((agg, v)=>{agg[v[0]]=v[1]; return agg}, {})
+
+                    this.setState({x: {
+                        ...this.state.x,
+                        ...nw
+                    }}
+                );
+                DeviceEventEmitter.addListener('regionDidEnter', (d)=>this.setState({y:d}))
+                DeviceEventEmitter.addListener('regionDidExit', (d)=>this.setState({z:d}))
+              })
+
+    })
   }
+
+  componentWillUnmount() {
+   Beacons.stopRangingBeaconsInRegion( "REGION1")
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Text>Open up App.js to start dupa 123 working on your app!</Text>
         <Text>Changes you make will automatically reload.</Text>
         <Text>Shake your phone to open the developer menu.</Text>
-        <Text>{JSON.stringify(this.state.x)}</Text>
+        <Text>x: {JSON.stringify(this.state.x, null, 2)}</Text>
+        <Text>y: {JSON.stringify(this.state.y)}</Text>
+        <Text>z: {JSON.stringify(this.state.z)}</Text>
       </View>
     );
   }
