@@ -39,6 +39,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="/home/dmarkiew/workspace/hack4future/mobile/android/app/build/intermediates/exploded-aar/mobile/react-native-firebase/unspecified/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="b409e23dac76891c267c1ef491fe3e6a1604e353">
+        <dex dex="/home/dmarkiew/workspace/hack4future/mobile/android/app/build/intermediates/pre-dexed/debug/mobile-react-native-firebase-unspecified_0c0474eb60a8b903f2af55ba9dbc4f68a9606d96.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/home/dmarkiew/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.13.0/a9283170b7305c8d92d25aff02a6ab7e45d06cbe/okio-1.13.0.jar"
         jumboMode="false"
         optimize="true"

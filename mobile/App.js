@@ -8,17 +8,15 @@ import Beacons from 'react-native-beacons-manager'
 Beacons.detectIBeacons()
 
 
-
 // Start detecting all iBeacons in the nearby
-
-Beacons.startRangingBeaconsInRegion('REGION1').then(console.log, console.error)
+Beacons.startRangingBeaconsInRegion('REGION3').then((e)=>console.log("H4FDM succ"+ e), (e)=>console.error("H4FDM succ"+e));
 
 export default class App extends React.Component {
     state = {}
   componentDidMount(){
   DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
     console.log('Found beacons!', data.beacons)
-    this.setState({x: data.beacons});
+    this.setState({x: data});
   })
 
   }
