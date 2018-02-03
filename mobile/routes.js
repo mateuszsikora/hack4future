@@ -1,4 +1,5 @@
 export default {
   cart: '/',
-  pay: '/pay'
+  pay: '/pay',
+  history: '/history'
 }

@@ -16,7 +16,14 @@ export default function NavFooter({location, history}) {
           active={location.pathname === routes.pay}
           onPress={() => location.pathname !== routes.pay && history.push(routes.pay)}
         >
-          <Text>Payment</Text>
+          <Text>Wallet</Text>
+        </Button>
+
+        <Button
+          active={location.pathname === routes.history}
+          onPress={() => location.pathname !== routes.history && history.push(routes.history)}
+        >
+          <Text>Payment history</Text>
         </Button>
       </FooterTab>
     </Footer>
