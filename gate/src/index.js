@@ -29,7 +29,7 @@ const doPayments = _.throttle(
     console.log("payments start!")
     const bcWithHoldPromises = Array.from(holds).map(h => {
       console.log('hold', h)
-      return new Inactive(h.uuid).then(()=>Device.findById(h.id).then((d) => [h, d]))
+      return new Inactive(h.uuid).save().then(()=>Device.findById(h.id).then((d) => [h, d]))
     })
     const bcWithHold = Promise.all(bcWithHoldPromises).then(dt => {
       console.log(dt);
