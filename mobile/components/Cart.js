@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Header, Content, List, ListItem, Thumbnail, Text, Body} from 'native-base';
+import {Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Title} from 'native-base';
 import firebase from 'react-native-firebase';
 
 const db = firebase.database();
@@ -34,7 +34,11 @@ export default class Cart extends React.Component {
 
     return (
       <Container>
-        <Header/>
+        <Header>
+          <Body>
+            <Title>Cart</Title>
+          </Body>
+        </Header>
         <Content>
           <List>
             {productKeys.map(key => this.renderProducts(products[key]))}
