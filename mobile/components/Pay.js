@@ -13,18 +13,23 @@ export default class Pay extends React.Component {
     allowance: 0,
     toDeposit: '',
     toWithdraw: '',
+    address: '',
   };
 
   componentDidMount() {
     this.contract = new web3.eth.Contract(abi, contractAddress);
+    const account = getAccount();
+    console.log('Your eth address', account.address);
+    this.setState({ address: account.address });
     this.observeAccount();
   }
 
   render() {
-    const { balance, allowance, toDeposit, toWithdraw } = this.state;
+    const { balance, allowance, toDeposit, toWithdraw, address } = this.state;
     return (
       <Content>
         <Text>Device ID: {DeviceInfo.getUniqueID()}</Text>
+        <Text>Your eth address: {address}</Text>
         <Text>Wallet balance: {balance} ETH</Text>
         <Text>Allowance for: {allowance} ETH</Text>
         <TextInput
