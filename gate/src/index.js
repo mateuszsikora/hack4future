@@ -66,7 +66,7 @@ Bleacon.on('discover', (bleacon) => {
         return;
       }
       Hold.findByUUID(bleacon.uuid).then(h => {
-        if (h) {
+        if (h && !holds.has(h)) {
           holds.add(h);
           doPayments();
         }
