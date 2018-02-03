@@ -9,7 +9,7 @@ const eth = require('./eth');
 
 const _ = require('lodash');
 
-const MAX_ACCURACY = 1;
+const MAX_ACCURACY = 0.25;
 
 const holds = new Set();
 
