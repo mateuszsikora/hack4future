@@ -10,7 +10,6 @@ const _ = require('lodash');
 
 const MAX_ACCURACY = 1;
 
-const beacons = new Set();
 const holds = new Set();
 
 function calculatePrice(beaconsSet) {
@@ -61,8 +60,7 @@ const doPayments = _.debounce(
 
 Bleacon.on('discover', (bleacon) => {
   if (bleacon.accuracy < MAX_ACCURACY) {
-    beacons.add(bleacon);
-    Hold.findByUUID(beacon.uuid).then(h => {
+    Hold.findByUUID(bleacon.uuid).then(h => {
       if (h) {
         holds.add(h);
         doPayments();
