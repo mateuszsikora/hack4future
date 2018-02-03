@@ -39,6 +39,7 @@ sellEvent.on('data', data => {
     .ref(`transactions/${data.returnValues._buyer}/${data.transactionHash}`)
     .set({
       order: data.returnValues._orderId,
-      price: data.returnValues._price,
+      price: web3.utils.fromWei(data.returnValues._price),
+      time: Date.now(),
     });
 });
