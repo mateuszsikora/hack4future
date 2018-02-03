@@ -5,7 +5,7 @@ class Product {
   constructor(name = '', description = '', price = '0', imageUrl = '') {
     this.name = name;
     this.description = description;
-    this.price = parseInt(price, 10);
+    this.price = parseFloat(price, 10);
     this.imageUrl = imageUrl;
   }
 
