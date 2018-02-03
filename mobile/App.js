@@ -9,7 +9,6 @@ import routes from './routes';
 import Cart from './components/Cart';
 import Pay from './components/Pay';
 import commonStyles from './commonStyles';
-import DeviceInfo from 'react-native-device-info';
 
 import Footer from "./components/Footer";
 // Tells the library to detect iBeacons
@@ -17,8 +16,6 @@ Beacons.detectIBeacons();
 Beacons.setForegroundScanPeriod(5000);
 Beacons.setBackgroundScanPeriod(5000);
 Beacons.setBackgroundBetweenScanPeriod(100);
-const About = () => <Text>About</Text>
-//const id = "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"
 const db = firebase.database();
 // Start detecting all iBeacons in the nearby
 
