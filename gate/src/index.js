@@ -4,6 +4,7 @@ const Product = require('./models/product');
 const Hold = require('./models/holds');
 const Device = require('./models/devices');
 const Order = require('./models/orders');
+const Inactive = require('./models/inactives');
 const eth = require('./eth');
 
 const _ = require('lodash');
@@ -29,7 +30,7 @@ const doPayments = _.debounce(
     console.log("payments start!")
     const bcWithHoldPromises = Array.from(holds).map(h=>{
       console.log('hold', h)
-      return Device.findById(h.id).then((d) => [h, d])
+      return new Inactive(h.uuid).then(()=>Device.findById(h.id).then((d) => [h, d]))
     })
     const bcWithHold = Promise.all(bcWithHoldPromises).
       then(dt => {
@@ -50,27 +51,32 @@ const doPayments = _.debounce(
           Promise.all(
             t.map(({account, products, amount })=>{
             const o = new Order(account, products);
-            return o.save().then(oo => {
-              console.log(account, o.id, amount);
-              eth.sell(account, o.id, amount+"");
-            })
-          }))
-
+            return o.save()
+              .then(oo => {
+                console.log(account, o.id, amount);
+                eth.sell(account, o.id, amount+"");
+              })
+            }))
         })
       })
-  }, 1000)
+  }, 10000)
 
 Bleacon.on('discover', (bleacon) => {
+  console.log("discovered", bleacon)
   if (bleacon.accuracy < MAX_ACCURACY) {
     beacons.add(bleacon);
-    Hold.findByUUID(beacon).then(h=> {
-      if(h){
-        holds.add(h);
-        doPayments();
-      }
-    });
+
+    Inactive.isActive(beacon).then(isActive=>{
+      if(!isActive){return;}
+      Hold.findByUUID(beacon).then(h=> {
+        if(h){
+          holds.add(h);
+          doPayments();
+        }
+      });
+    })
   }
   calculatePrice(beacons).then(({ amount }) => console.log(amount))
 });
 
-Bleacon.startScanning(console.error);
+Bleacon.startScanning();
