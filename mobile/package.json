@@ -18,10 +18,12 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "native-base": "^2.3.7",
     "react": "16.2.0",
     "react-native": "0.52.0",
     "react-native-beacons-manager": "^1.0.7",
     "react-native-device-info": "^0.14.0",
-    "react-native-firebase": "^3.2.4"
+    "react-native-firebase": "^3.2.4",
+    "react-router-native": "^4.2.0"
   }
 }

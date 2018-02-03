@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 
+import Link from './pages/Link';
 import Home from './pages/Home';
 import Wallet from './pages/Wallet';
 import Managment from './pages/Managment';
@@ -12,6 +13,7 @@ export default class App extends Component {
         <div>
           <Route path="/" exact component={Home} />
           <Route path="/wallet" component={Wallet} />
+          <Route path="/link" component={Link} />
           <Route path="/managment" component={Managment} />
         </div>
       </BrowserRouter>

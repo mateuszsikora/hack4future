@@ -1,21 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, ScrollView, DeviceEventEmitter } from 'react-native';
 
+import {NativeRouter, Route, Redirect, Switch, withRouter, AndroidBackButton} from 'react-router-native'
 import Beacons from 'react-native-beacons-manager'
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 import {reduceBeaconsState, saveHolds} from './beacons';
+import {Container} from 'native-base';
+import routes from './routes';
+import Cart from './components/Cart';
+import Pay from './components/Pay';
+import commonStyles from './commonStyles';
 
+import Footer from "./components/Footer";
 // Tells the library to detect iBeacons
 Beacons.detectIBeacons();
 Beacons.setForegroundScanPeriod(5000);
 Beacons.setBackgroundScanPeriod(5000);
 Beacons.setBackgroundBetweenScanPeriod(100);
-
-//const id = "E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"
 const db = firebase.database();
-
 // Start detecting all iBeacons in the nearby
+
+const FooterWithRouter = withRouter(Footer);
 export default class App extends React.Component {
   state = { beacons: {}, products: {} };
 
@@ -68,12 +74,14 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text>App</Text>
-        <Text>deviceId: {DeviceInfo.getUniqueID()}</Text>
-        <Text>beacons: {JSON.stringify(this.state.beacons, null, 2)}</Text>
-        <Text>products: {JSON.stringify(this.state.products, null, 2)}</Text>
-      </ScrollView>
+      <NativeRouter>
+        <Container style={commonStyles.container}>
+          <AndroidBackButton/>
+          <Route exact path={routes.cart} component={Cart} />
+          <Route path={routes.pay} component={Pay}/>
+          <FooterWithRouter />
+        </Container>
+      </NativeRouter>
     );
   }
 }
