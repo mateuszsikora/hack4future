@@ -23,7 +23,7 @@ const db = firebase.database();
 
 const FooterWithRouter = withRouter(Footer);
 export default class App extends React.Component {
-  state = { beacons: {}, products: {} };
+  state = { beacons: {}};
 
   componentDidMount() {
     try {
@@ -58,12 +58,6 @@ export default class App extends React.Component {
         });
 
         db.goOnline();
-
-        db.ref(`products`).once('value')
-          .then(snapshot => {
-            const val = snapshot.val();
-            this.setState({ products: val });
-          })
       })
   }
 
@@ -85,11 +79,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
