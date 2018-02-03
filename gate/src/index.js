@@ -29,7 +29,7 @@ const doPayments = _.throttle(
     console.log("payments start!")
     const bcWithHoldPromises = Array.from(holds).map(h => {
       console.log('hold', h)
-      return new Inactive(h.uuid).save().then(()=>Device.findById(h.id).then((d) => [h, d]))
+      return new Inactive(h.uuid).save().then(() => Device.findById(h.id).then((d) => [h, d]))
     })
     const bcWithHold = Promise.all(bcWithHoldPromises).then(dt => {
       console.log(dt);
@@ -62,11 +62,13 @@ const doPayments = _.throttle(
 Bleacon.on('discover', (bleacon) => {
   if (bleacon.accuracy < MAX_ACCURACY) {
     console.log("discovered", bleacon)
-    Inactive.isActive(bleacon.uuid).then(isActive=>{
+    Inactive.isActive(bleacon.uuid).then(isActive => {
       console.log('isActive');
-      if(!isActive){return;}
-      Hold.findByUUID(bleacon).then(h=> {
-        if(h){
+      if (!isActive) {
+        return;
+      }
+      Hold.findByUUID(bleacon.uuid).then(h => {
+        if (h) {
           holds.add(h);
           doPayments();
         }
