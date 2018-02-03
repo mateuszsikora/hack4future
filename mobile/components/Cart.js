@@ -1,12 +1,23 @@
 import React from 'react';
-import {Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Title} from 'native-base';
+import {Container, Header, Content, Spinner, List, ListItem, Thumbnail, Text, Body, Title} from 'native-base';
 import firebase from 'react-native-firebase';
 
 const db = firebase.database();
-
+const centerStyles = {
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center'
+};
 export default class Cart extends React.Component {
 
-  state = {products: []};
+  state = {
+    products: [],
+    productsFetching: true,
+    beaconsFetching: true
+  };
+
   products = {};
   beacons = {};
 
@@ -14,11 +25,13 @@ export default class Cart extends React.Component {
     db.ref(`products`).once('value')
       .then(snapshot => {
         this.products = snapshot.val();
+        this.setState({productsFetching: false});
       });
 
     db.ref(`beacons`).once('value')
       .then(snapshot => {
         this.beacons = snapshot.val();
+        this.setState({beaconsFetching: false});
       });
   }
 
@@ -33,6 +46,7 @@ export default class Cart extends React.Component {
       .map(productId => this.products[productId]);
     this.setState({products})
   }
+
   renderProducts(product) {
     return (
       <ListItem key={product.id}>
@@ -45,18 +59,50 @@ export default class Cart extends React.Component {
     );
   }
 
+  renderList() {
+    return (
+      <List>
+        {this.state.products.map(product => this.renderProducts(product))}
+      </List>
+    );
+  }
+
+  renderNoItems() {
+    return (
+      <Container style={centerStyles}>
+        <Text>No items in your cart</Text>
+      </Container>
+    );
+  }
+
+  renderListOrInfo() {
+    return (
+      <Container>
+        {this.state.products.length > 0 && this.renderList()}
+        {this.state.products.length === 0 && this.renderNoItems()}
+      </Container>
+    );
+  }
+
+  renderSpinnger() {
+    return (
+      <Container style={centerStyles}>
+        <Spinner color='blue'/>
+      </Container>
+    );
+  }
+
   render() {
     return (
       <Container>
         <Header>
           <Body>
-            <Title>Cart</Title>
+          <Title>Cart</Title>
           </Body>
         </Header>
         <Content>
-          <List>
-            {this.state.products.map(product => this.renderProducts(product))}
-          </List>
+          {(!this.state.beaconsFetching && !this.state.productsFetching) && this.renderListOrInfo()}
+          {(this.state.beaconsFetching || this.state.productsFetching) && this.renderSpinnger()}
         </Content>
       </Container>
     );
