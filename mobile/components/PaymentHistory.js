@@ -6,7 +6,7 @@ import {Table, Row, Rows} from 'react-native-table-component';
 export default class PaymentHistory extends React.Component {
 
   render() {
-    const tableHead = ['Head2', 'Head3', 'Head4'];
+    const tableHead = ['Date', 'Amount', 'Transaction hash'];
 
     const tableData = [
       ['1', '2', '3',],
@@ -37,5 +37,5 @@ const styles = {
   text: {marginLeft: 5},
   row: {height: 30},
   head: {height: 40},
-  headText: {color: '#000', textAlign: 'center'}
+  headText: {color: '#000', textAlign: 'center'},
 };
