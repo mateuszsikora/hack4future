@@ -67,7 +67,6 @@ Bleacon.on('discover', (bleacon) => {
       }
     });
   }
-  calculatePrice(beacons).then(({amount}) => console.log(amount))
 });
 
 Bleacon.startScanning();
