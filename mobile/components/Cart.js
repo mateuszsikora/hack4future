@@ -43,7 +43,16 @@ export default class Cart extends React.Component {
     const products = Object.keys(holds)
       .map(key => (this.beacons[key] || {}).productId)
       .filter(productId => productId !== undefined)
-      .map(productId => this.products[productId]);
+      .map(productId => this.products[productId])
+      .sort((a, b) => {
+        if (a.id < b.id) {
+          return -1;
+        }
+        if (a.id > b.id) {
+          return 1;
+        }
+        return 0
+      });
     this.setState({products})
   }
 
