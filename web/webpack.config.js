@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpack = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -29,7 +30,7 @@ module.exports = {
             loader: 'style-loader',
           },
           {
-            loader: 'css-modules-loader',
+            loader: 'css-loader',
             options: {
               modules: true,
               importLoaders: 1,
@@ -75,12 +76,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(process.cwd(), 'index.html'),
     }),
-    new webpack.WatchIgnorePlugin([/scss\.d\.ts$/]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV':
         JSON.stringify(process.env.NODE_ENV) || 'development',
     }),
-    new webpack.NamedModulesPlugin(),
+    new CopyWebpack(['./assets']),
   ],
   devServer: {
     compress: true,

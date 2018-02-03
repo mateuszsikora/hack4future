@@ -5,6 +5,8 @@ import sigUtil from 'eth-sig-util';
 
 import { signTypedData } from '../utils/web3';
 
+import style from './link.scss';
+
 export default class Link extends Component {
   web3 = new Web3();
 
@@ -22,7 +24,7 @@ export default class Link extends Component {
     const { deviceId } = this.state;
 
     return (
-      <div>
+      <div className={style.self}>
         <Input
           placeholder="Device id"
           value={deviceId}
@@ -37,6 +39,7 @@ export default class Link extends Component {
     this.signMessage()
       .then(() => {
         const address = this.props.history.replace('/wallet');
+        // firebase set
       })
       .catch(e => console.log('error', e));
   };
