@@ -10,6 +10,10 @@ const centerStyles = {
   alignItems: 'center',
   justifyContent: 'center'
 };
+
+const containerStyles = {
+  display: 'flex'
+};
 export default class Cart extends React.Component {
 
   state = {
@@ -103,7 +107,7 @@ export default class Cart extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Container style={containerStyles}>
         <Header>
           <Body>
           <Title>Cart</Title>
@@ -117,3 +121,5 @@ export default class Cart extends React.Component {
     );
   }
 }
+
+
