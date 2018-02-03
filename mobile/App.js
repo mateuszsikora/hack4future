@@ -21,6 +21,7 @@ import commonStyles from './commonStyles';
 import Footer from './components/Footer';
 
 import './web3';
+import PaymentHistory from "./components/PaymentHistory";
 
 // Tells the library to detect iBeacons
 Beacons.detectIBeacons();
@@ -88,6 +89,7 @@ export default class App extends React.Component {
             render={props => <Cart {...props} holds={this.state.beacons} />}
           />
           <Route path={routes.pay} component={Pay} />
+          <Route path={routes.history} component={PaymentHistory} />
           <FooterWithRouter />
         </Container>
       </NativeRouter>
