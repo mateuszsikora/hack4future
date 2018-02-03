@@ -24,6 +24,7 @@ export default class Cart extends React.Component {
 
   products = {};
   beacons = {};
+  inactive = {};
 
   componentDidMount() {
     db.ref(`products`).once('value')
@@ -37,6 +38,11 @@ export default class Cart extends React.Component {
         this.beacons = snapshot.val();
         this.setState({beaconsFetching: false});
       });
+
+    db.ref(`inactive`).once('value')
+      .then(snapshot => {
+        this.inactive = snapshot.val();
+      });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,6 +51,7 @@ export default class Cart extends React.Component {
 
   mapHoldsToProducts(holds) {
     const products = Object.keys(holds)
+      .filter(key => !this.inactive[key])
       .map(key => (this.beacons[key] || {}).productId)
       .filter(productId => productId !== undefined)
       .map(productId => this.products[productId])
