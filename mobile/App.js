@@ -71,7 +71,7 @@ export default class App extends React.Component {
       <NativeRouter>
         <Container style={commonStyles.container}>
           <AndroidBackButton/>
-          <Route exact path={routes.cart} component={Cart} />
+          <Route exact path={routes.cart} render={(props) => <Cart {...props} holds={this.state.beacons} />} />
           <Route path={routes.pay} component={Pay}/>
           <FooterWithRouter />
         </Container>
