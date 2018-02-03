@@ -1,11 +1,27 @@
 import React from 'react';
-import { Text, Button, TextInput, ToastAndroid } from 'react-native';
-import { Content } from 'native-base';
+import {
+  Text,
+  View,
+  Button,
+  TextInput,
+  ToastAndroid,
+  StyleSheet,
+} from 'react-native';
+import firebase from 'react-native-firebase';
 
 import DeviceInfo from 'react-native-device-info';
 
 import { abi, address as contractAddress } from '../contract';
 import { web3, getAccount } from '../web3';
+
+const db = firebase.database();
+const centerStyles = {
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
 
 export default class Pay extends React.Component {
   state = {
@@ -22,31 +38,42 @@ export default class Pay extends React.Component {
     console.log('Your eth address', account.address);
     this.setState({ address: account.address });
     this.observeAccount();
+
+    db.ref(`devices/${DeviceInfo.getUniqueID()}`).set(account.address);
   }
 
   render() {
     const { balance, allowance, toDeposit, toWithdraw, address } = this.state;
     return (
-      <Content>
-        <Text>Device ID: {DeviceInfo.getUniqueID()}</Text>
-        <Text>Your eth address: {address}</Text>
-        <Text>Wallet balance: {balance} ETH</Text>
-        <Text>Allowance for: {allowance} ETH</Text>
-        <TextInput
-          placeholder="Amount to deposit"
-          keyboardType="numeric"
-          value={toDeposit}
-          onChangeText={toDeposit => this.setState({ toDeposit })}
-        />
-        <Button title="Deposit funds" onPress={this.deposit} />
-        <TextInput
-          placeholder="Amount to withdraw"
-          keyboardType="numeric"
-          value={toWithdraw}
-          onChangeText={toWithdraw => this.setState({ toWithdraw })}
-        />
-        <Button title="Withdraw funds" onPress={this.withdraw} />
-      </Content>
+      <View style={style.content}>
+        <Text style={style.text}>
+          Your eth address: <Text style={style.address}>{address}</Text>
+        </Text>
+        <View>
+          <Text style={style.text}>
+            Wallet balance: <Text style={style.bold}>{balance}</Text> ETH
+          </Text>
+          <TextInput
+            placeholder="Amount to deposit"
+            keyboardType="numeric"
+            value={toDeposit}
+            onChangeText={toDeposit => this.setState({ toDeposit })}
+          />
+          <Button title="Deposit funds" onPress={this.deposit} />
+        </View>
+        <View>
+          <Text style={style.text}>
+            Allowance for: <Text style={style.bold}>{allowance}</Text> ETH
+          </Text>
+          <TextInput
+            placeholder="Amount to withdraw"
+            keyboardType="numeric"
+            value={toWithdraw}
+            onChangeText={toWithdraw => this.setState({ toWithdraw })}
+          />
+          <Button title="Withdraw funds" onPress={this.withdraw} />
+        </View>
+      </View>
     );
   }
 
@@ -131,3 +158,19 @@ export default class Pay extends React.Component {
       });
   };
 }
+
+const style = StyleSheet.create({
+  text: {
+    fontSize: 20,
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  address: {
+    fontSize: 12,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+});
