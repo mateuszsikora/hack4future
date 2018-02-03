@@ -23,7 +23,7 @@ function calculatePrice(beaconsSet) {
     }));
 }
 
-const doPayments = _.debounce(
+const doPayments = _.throttle(
   () => {
     console.log("payments start!")
     const bcWithHoldPromises = Array.from(holds).map(h => {
@@ -56,7 +56,7 @@ const doPayments = _.debounce(
 
       })
     })
-  }, 1000)
+  }, 1000, {leading: true, trailing: false});
 
 Bleacon.on('discover', (bleacon) => {
   if (bleacon.accuracy < MAX_ACCURACY) {
