@@ -63,9 +63,9 @@ Bleacon.on('discover', (bleacon) => {
   console.log("discovered", bleacon)
   if (bleacon.accuracy < MAX_ACCURACY) {
 
-    Inactive.isActive(beacon).then(isActive=>{
+    Inactive.isActive(bleacon.uuid).then(isActive=>{
       if(!isActive){return;}
-      Hold.findByUUID(beacon).then(h=> {
+      Hold.findByUUID(bleacon).then(h=> {
         if(h){
           holds.add(h);
           doPayments();
