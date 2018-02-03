@@ -4,6 +4,7 @@ import { StyleSheet, Text, ScrollView, DeviceEventEmitter } from 'react-native';
 import Beacons from 'react-native-beacons-manager'
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
+import {reduceBeaconsState, saveHolds} from './beacons';
 
 // Tells the library to detect iBeacons
 Beacons.detectIBeacons();
@@ -43,18 +44,11 @@ export default class App extends React.Component {
       .then(() => {
         DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
           console.log('Found beacons!', data.beacons);
-          const nw = data.beacons.map(b => [`${b.uuid}:${b.major}:${b.minor}`, b])
-            .reduce((agg, v) => {
-              agg[v[0]] = v[1];
-              return agg;
-            }, {});
-
+          const beacons =  reduceBeaconsState(this.state.beacons, data);
           this.setState({
-            beacons: {
-              ...this.state.beacons,
-              ...nw
-            }
+            beacons: beacons
           });
+          saveHolds(db, DeviceInfo.getUniqueID(), beacons);
         });
 
         db.goOnline();
