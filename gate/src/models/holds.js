@@ -11,7 +11,6 @@ class Hold {
     return db.ref('holds').once('value').then(snapshot => {
       const val = snapshot.val();
       if(val){
-        console.log("weeee")
         return Object
           .keys(val)
           .filter(id=> val[id][uuid])

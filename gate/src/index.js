@@ -60,10 +60,10 @@ const doPayments = _.throttle(
   }, 1000, {leading: true, trailing: false});
 
 Bleacon.on('discover', (bleacon) => {
-  console.log("discovered", bleacon)
   if (bleacon.accuracy < MAX_ACCURACY) {
-
+    console.log("discovered", bleacon)
     Inactive.isActive(bleacon.uuid).then(isActive=>{
+      console.log('isActive');
       if(!isActive){return;}
       Hold.findByUUID(bleacon).then(h=> {
         if(h){
