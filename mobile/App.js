@@ -20,7 +20,7 @@ import Pay from './components/Pay';
 import commonStyles from './commonStyles';
 import Footer from './components/Footer';
 
-import web3 from './web3';
+import './web3';
 
 // Tells the library to detect iBeacons
 Beacons.detectIBeacons();
