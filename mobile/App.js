@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, DeviceEventEmitter } from 'react-native';
+import { StyleSheet, Text, ScrollView, DeviceEventEmitter, AsyncStorage } from 'react-native';
 
 import {NativeRouter, Route, Redirect, Switch, withRouter, AndroidBackButton} from 'react-router-native'
 import Beacons from 'react-native-beacons-manager'
@@ -11,7 +11,7 @@ import routes from './routes';
 import Cart from './components/Cart';
 import Pay from './components/Pay';
 import commonStyles from './commonStyles';
-
+import Web3 from 'web3';
 import Footer from "./components/Footer";
 // Tells the library to detect iBeacons
 Beacons.detectIBeacons();
@@ -20,6 +20,17 @@ Beacons.setBackgroundScanPeriod(5000);
 Beacons.setBackgroundBetweenScanPeriod(100);
 const db = firebase.database();
 // Start detecting all iBeacons in the nearby
+
+let account;
+AsyncStorage.getItem("privateKey", (err,v)=> {
+  const web3 = new Web3();
+  if(!v || err) {
+    account = web3.eth.accounts.create();
+    AsyncStorage.setItem("privateKey", account.privateKey);
+  }else{
+    account = web3.eth.accounts.privateKeyToAccount(v);
+  }
+})
 
 const FooterWithRouter = withRouter(Footer);
 export default class App extends React.Component {
@@ -76,6 +87,7 @@ export default class App extends React.Component {
     return (
       <NativeRouter>
         <Container style={commonStyles.container}>
+          <Text>{account && account.address + ""}</Text>
           <AndroidBackButton/>
           <Route exact path={routes.cart} component={Cart} />
           <Route path={routes.pay} component={Pay}/>
