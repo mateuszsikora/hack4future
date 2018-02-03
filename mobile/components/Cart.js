@@ -6,16 +6,33 @@ const db = firebase.database();
 
 export default class Cart extends React.Component {
 
-  state = {products: {}};
+  state = {products: []};
+  products = {};
+  beacons = {};
 
   componentDidMount() {
     db.ref(`products`).once('value')
       .then(snapshot => {
-        const val = snapshot.val();
-        this.setState({products: val});
-      })
+        this.products = snapshot.val();
+      });
+
+    db.ref(`beacons`).once('value')
+      .then(snapshot => {
+        this.beacons = snapshot.val();
+      });
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.mapHoldsToProducts(nextProps.holds);
+  }
+
+  mapHoldsToProducts(holds) {
+    const products = Object.keys(holds)
+      .map(key => (this.beacons[key] || {}).productId)
+      .filter(productId => productId !== undefined)
+      .map(productId => this.products[productId]);
+    this.setState({products})
+  }
   renderProducts(product) {
     return (
       <ListItem key={product.id}>
@@ -29,9 +46,6 @@ export default class Cart extends React.Component {
   }
 
   render() {
-    const products = this.state.products;
-    const productKeys = Object.keys(products);
-
     return (
       <Container>
         <Header>
@@ -41,7 +55,7 @@ export default class Cart extends React.Component {
         </Header>
         <Content>
           <List>
-            {productKeys.map(key => this.renderProducts(products[key]))}
+            {this.state.products.map(product => this.renderProducts(product))}
           </List>
         </Content>
       </Container>

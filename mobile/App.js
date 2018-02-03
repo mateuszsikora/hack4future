@@ -34,7 +34,7 @@ AsyncStorage.getItem("privateKey", (err,v)=> {
 
 const FooterWithRouter = withRouter(Footer);
 export default class App extends React.Component {
-  state = { beacons: {}, products: {} };
+  state = { beacons: {}};
 
   componentDidMount() {
     try {
@@ -69,12 +69,6 @@ export default class App extends React.Component {
         });
 
         db.goOnline();
-
-        db.ref(`products`).once('value')
-          .then(snapshot => {
-            const val = snapshot.val();
-            this.setState({ products: val });
-          })
       })
   }
 
@@ -89,7 +83,7 @@ export default class App extends React.Component {
         <Container style={commonStyles.container}>
           <Text>{account && account.address + ""}</Text>
           <AndroidBackButton/>
-          <Route exact path={routes.cart} component={Cart} />
+          <Route exact path={routes.cart} render={(props) => <Cart {...props} holds={this.state.beacons} />} />
           <Route path={routes.pay} component={Pay}/>
           <FooterWithRouter />
         </Container>
@@ -97,11 +91,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
