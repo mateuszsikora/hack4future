@@ -7,21 +7,15 @@ import {
   ToastAndroid,
   StyleSheet,
 } from 'react-native';
+import {Header, Content, Title, Container, Body} from 'native-base';
 import firebase from 'react-native-firebase';
 
 import DeviceInfo from 'react-native-device-info';
 
-import { abi, address as contractAddress } from '../contract';
-import { web3, getAccount } from '../web3';
+import {abi, address as contractAddress} from '../contract';
+import {web3, getAccount} from '../web3';
 
 const db = firebase.database();
-const centerStyles = {
-  display: 'flex',
-  flex: 1,
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
 
 export default class Pay extends React.Component {
   state = {
@@ -36,55 +30,62 @@ export default class Pay extends React.Component {
     this.contract = new web3.eth.Contract(abi, contractAddress);
     const account = getAccount();
     console.log('Your eth address', account.address);
-    this.setState({ address: account.address });
+    this.setState({address: account.address});
     this.observeAccount();
 
     db.ref(`devices/${DeviceInfo.getUniqueID()}`).set(account.address);
   }
 
   render() {
-    const { balance, allowance, toDeposit, toWithdraw, address } = this.state;
+    const {balance, allowance, toDeposit, toWithdraw, address} = this.state;
     return (
-      <View style={style.content}>
-        <Text style={style.text}>
-          Your eth address: <Text style={style.address}>{address}</Text>
-        </Text>
-        <View>
+      <Container>
+        <Header>
+          <Body>
+          <Title>Wallet</Title>
+          </Body>
+        </Header>
+        <View style={style.content}>
           <Text style={style.text}>
-            Wallet balance: <Text style={style.bold}>{balance}</Text> ETH
+            Your eth address: <Text style={style.address}>{address}</Text>
           </Text>
-          <TextInput
-            placeholder="Amount to deposit"
-            keyboardType="numeric"
-            value={toDeposit}
-            onChangeText={toDeposit => this.setState({ toDeposit })}
-          />
-          <Button title="Deposit funds" onPress={this.deposit} />
+          <View>
+            <Text style={style.text}>
+              Wallet balance: <Text style={style.bold}>{balance}</Text> ETH
+            </Text>
+            <TextInput
+              placeholder="Amount to deposit"
+              keyboardType="numeric"
+              value={toDeposit}
+              onChangeText={toDeposit => this.setState({toDeposit})}
+            />
+            <Button title="Deposit funds" onPress={this.deposit}/>
+          </View>
+          <View>
+            <Text style={style.text}>
+              Allowance for: <Text style={style.bold}>{allowance}</Text> ETH
+            </Text>
+            <TextInput
+              placeholder="Amount to withdraw"
+              keyboardType="numeric"
+              value={toWithdraw}
+              onChangeText={toWithdraw => this.setState({toWithdraw})}
+            />
+            <Button title="Withdraw funds" onPress={this.withdraw}/>
+          </View>
         </View>
-        <View>
-          <Text style={style.text}>
-            Allowance for: <Text style={style.bold}>{allowance}</Text> ETH
-          </Text>
-          <TextInput
-            placeholder="Amount to withdraw"
-            keyboardType="numeric"
-            value={toWithdraw}
-            onChangeText={toWithdraw => this.setState({ toWithdraw })}
-          />
-          <Button title="Withdraw funds" onPress={this.withdraw} />
-        </View>
-      </View>
+      </Container>
     );
   }
 
   observeAccount = async () => {
     const account = getAccount();
     const balance = await web3.eth.getBalance(account.address);
-    this.setState({ balance: web3.utils.fromWei(balance) });
+    this.setState({balance: web3.utils.fromWei(balance)});
     const allowance = await this.contract.methods
       .balanceOf(account.address)
       .call();
-    this.setState({ allowance: web3.utils.fromWei(allowance) });
+    this.setState({allowance: web3.utils.fromWei(allowance)});
 
     setTimeout(this.observeAccount, 5 * 1000);
   };
@@ -107,7 +108,7 @@ export default class Pay extends React.Component {
         );
         transaction.on('transactionHash', hash => {
           console.log(hash);
-          this.setState({ toDeposit: '' });
+          this.setState({toDeposit: ''});
           ToastAndroid.show(
             'Transaction sent successfully',
             ToastAndroid.LONG,
@@ -141,7 +142,7 @@ export default class Pay extends React.Component {
         );
         transaction.on('transactionHash', hash => {
           console.log(hash);
-          this.setState({ toWithdraw: '' });
+          this.setState({toWithdraw: ''});
           ToastAndroid.show(
             'Transaction sent successfully',
             ToastAndroid.LONG,
