@@ -17,7 +17,7 @@ import Footer from "./components/Footer";
 Beacons.detectIBeacons();
 Beacons.setForegroundScanPeriod(5000);
 Beacons.setBackgroundScanPeriod(5000);
-Beacons.setBackgroundBetweenScanPeriod(100);
+Beacons.setBackgroundBetweenScanPeriod(0);
 const db = firebase.database();
 // Start detecting all iBeacons in the nearby
 
